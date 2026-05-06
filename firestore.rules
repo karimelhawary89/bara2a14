@@ -1,0 +1,48 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Auth Helpers
+    function isSignedIn() { return request.auth != null; }
+    function isOwner(userId) { return isSignedIn() && request.auth.uid == userId; }
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+
+    // User profiles
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow write: if isOwner(userId);
+    }
+
+    // Clients
+    match /clients/{clientId} {
+      allow read, write: if isSignedIn();
+    }
+
+    // Matters
+    match /matters/{matterId} {
+      allow read, write: if isSignedIn();
+    }
+
+    // Legal Services (Read only for users, write for admin which we assume is anyone signed in for this demo or specific logic)
+    match /legalServices/{serviceId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn();
+    }
+
+    // Consultations
+    match /consultations/{consultationId} {
+      allow read, write: if isSignedIn();
+    }
+
+    // Time Entries
+    match /timeEntries/{entryId} {
+      allow read, write: if isSignedIn();
+    }
+  }
+}

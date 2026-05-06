@@ -1,0 +1,6 @@
+{
+  "name": "Bara2a Legal ERP",
+  "description": "AI-powered legal practice management system for Egyptian and Arab lawyers, featuring AI assistant, document generation, and digital government services integration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["AI Legal Assistant", "Practice Management", "Document Generation"]
+}

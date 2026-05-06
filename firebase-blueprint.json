@@ -1,0 +1,122 @@
+{
+  "entities": {
+    "users": {
+        "title": "User Profile",
+        "description": "User account information and preferences",
+        "type": "object",
+        "properties": {
+            "name": { "type": "string" },
+            "email": { "type": "string" },
+            "role": { "type": "string", "enum": ["شريك", "مشرف", "محامٍ أول", "محامٍ", "مساعد قانوني", "مالية", "عمليات"] },
+            "plan": { "type": "string", "enum": ["free", "pro", "firm"] },
+            "dailyUsage": { "type": "integer" },
+            "lastUsageDate": { "type": "string" }
+        },
+        "required": ["name", "email", "role"]
+    },
+    "clients": {
+      "title": "Client",
+      "description": "Legal clients managed by the firm",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string", "enum": ["فرد", "شركة", "جهة حكومية", "مؤسسة"] },
+        "status": { "type": "string", "enum": ["نشط", "محتمل", "مؤجل", "مغلق"] },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "nationality": { "type": "string" },
+        "riskScore": { "type": "integer" },
+        "paymentBehavior": { "type": "string" },
+        "notes": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "type", "status"]
+    },
+    "matters": {
+      "title": "Legal Matter",
+      "description": "Cases and legal matters",
+      "type": "object",
+      "properties": {
+        "caseNumber": { "type": "string" },
+        "title": { "type": "string" },
+        "clientId": { "type": "string" },
+        "type": { "type": "string" },
+        "stage": { "type": "string" },
+        "status": { "type": "string" },
+        "priority": { "type": "string" },
+        "lawyerId": { "type": "string" },
+        "agreedFees": { "type": "number" },
+        "openDate": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "clientId", "status"]
+    },
+    "legalServices": {
+      "title": "Legal Service",
+      "description": "Digital Egypt governmental services",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "description": { "type": "string" },
+        "price": { "type": "number" },
+        "estimatedDays": { "type": "integer" },
+        "requiredDocuments": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["name", "category"]
+    },
+    "consultations": {
+      "title": "Consultation",
+      "description": "Client consultations and advice sessions",
+      "type": "object",
+      "properties": {
+        "clientId": { "type": "string" },
+        "topic": { "type": "string" },
+        "date": { "type": "string", "format": "date-time" },
+        "duration": { "type": "integer" },
+        "summary": { "type": "string" },
+        "isPaid": { "type": "boolean" }
+      },
+      "required": ["clientId", "topic", "date"]
+    },
+    "timeEntries": {
+        "title": "Time Entry",
+        "description": "Billable hours tracked by lawyers",
+        "type": "object",
+        "properties": {
+            "lawyerId": { "type": "string" },
+            "matterId": { "type": "string" },
+            "description": { "type": "string" },
+            "hours": { "type": "number" },
+            "date": { "type": "string", "format": "date" },
+            "isBilled": { "type": "boolean" }
+        },
+        "required": ["lawyerId", "hours", "date"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+        "schema": { "$ref": "#/entities/users" },
+        "description": "Private user profiles"
+    },
+    "/clients/{clientId}": {
+      "schema": { "$ref": "#/entities/clients" },
+      "description": "Client records"
+    },
+    "/matters/{matterId}": {
+      "schema": { "$ref": "#/entities/matters" },
+      "description": "Legal matter records"
+    },
+    "/legalServices/{serviceId}": {
+      "schema": { "$ref": "#/entities/legalServices" },
+      "description": "Index of governmental services"
+    },
+    "/consultations/{consultationId}": {
+      "schema": { "$ref": "#/entities/consultations" },
+      "description": "Consultation sessions"
+    },
+    "/timeEntries/{entryId}": {
+      "schema": { "$ref": "#/entities/timeEntries" },
+      "description": "Tracking billable work"
+    }
+  }
+}
